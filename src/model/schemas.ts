@@ -193,4 +193,5 @@ export const modelConfigImportSchema = z.object({
   scopeIndex: z.any(),
   waveSuitability: z.any(),
   poc: z.any(),
+  ruleSwitches: z.any(),
 });

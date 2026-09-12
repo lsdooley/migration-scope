@@ -103,6 +103,7 @@ export interface ModelConfig {
     laterWaveConfidenceMax: number;
   };
   poc: { maxNormalQuestions: number; maxQuestionsWithConditional: number; fileSizeLimitMb: number };
+  ruleSwitches: Record<string, boolean>;
 }
 
 export const defaultModelConfig: ModelConfig = {
@@ -303,6 +304,11 @@ export const defaultModelConfig: ModelConfig = {
   },
 
   poc: { maxNormalQuestions: 12, maxQuestionsWithConditional: 15, fileSizeLimitMb: 5 },
+
+  ruleSwitches: {
+    'R-101': true, 'R-204': true, 'R-307': true, 'R-412': true, 'R-509': true,
+    'R-610': true, 'R-611': true, 'R-702': true, 'R-703': true, 'R-804': true, 'R-901': true,
+  },
 };
 
 /** Validate a model config's weights/thresholds before accepting an edit or import. */

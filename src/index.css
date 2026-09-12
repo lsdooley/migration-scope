@@ -300,9 +300,42 @@ table.ms-table td {
 }
 
 @media (max-width: 640px) {
-  .ms-table-cards table.ms-table,
+  /* Tables transform into stacked cards on narrow screens instead of forcing
+     horizontal scroll — thead is dropped and each cell's data-label stands in
+     for the column header. */
   .ms-table-cards table.ms-table thead {
     display: none;
+  }
+  .ms-table-cards table.ms-table,
+  .ms-table-cards table.ms-table tbody,
+  .ms-table-cards table.ms-table tr,
+  .ms-table-cards table.ms-table td,
+  .ms-table-cards table.ms-table th {
+    display: block;
+    width: 100%;
+  }
+  .ms-table-cards table.ms-table tr {
+    margin-bottom: var(--ms-space-3);
+    border: 1px solid var(--ms-border);
+    border-radius: var(--ms-radius-md);
+    padding: var(--ms-space-2) var(--ms-space-3);
+  }
+  .ms-table-cards table.ms-table td,
+  .ms-table-cards table.ms-table th {
+    border: none;
+    padding: 4px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--ms-space-2);
+    text-align: right;
+  }
+  .ms-table-cards table.ms-table td::before,
+  .ms-table-cards table.ms-table th[data-label]::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: var(--ms-text-muted);
+    text-align: left;
   }
 }
 
@@ -318,6 +351,12 @@ table.ms-table td {
   border-radius: var(--ms-radius-md);
   padding: var(--ms-space-3);
   border: 1px solid var(--ms-danger-text);
+}
+
+@media print {
+  header, nav, .ms-skip-link, button { display: none !important; }
+  main { overflow: visible !important; padding: 0 !important; }
+  .ms-card { border: 1px solid #000 !important; break-inside: avoid; }
 }
 
 .ms-inline-warning {

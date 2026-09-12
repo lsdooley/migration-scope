@@ -374,7 +374,7 @@ export function calculateEstimate(
     hasFixedTarget: answers.targetCompletionWeeks != null,
     integrationDetailCount: app.integrations.length,
   };
-  const { fired, effects } = evaluateRules(ruleCtx);
+  const { fired, effects } = evaluateRules(ruleCtx, config.ruleSwitches);
 
   let riskFloor: RiskBand = 'Low';
   let confidencePenalty = 0;

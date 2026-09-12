@@ -176,10 +176,11 @@ const RULES: RuleDefinition[] = [
   },
 ];
 
-export function evaluateRules(ctx: RuleContext): { fired: FiredRule[]; effects: RuleEffect[] } {
+export function evaluateRules(ctx: RuleContext, ruleSwitches: Record<string, boolean> = {}): { fired: FiredRule[]; effects: RuleEffect[] } {
   const fired: FiredRule[] = [];
   const effects: RuleEffect[] = [];
   for (const rule of RULES) {
+    if (ruleSwitches[rule.id] === false) continue; // disabled via Model configuration
     if (rule.test(ctx)) {
       fired.push({
         id: rule.id,
