@@ -4,6 +4,7 @@ import type { ViewName } from '../state/appState';
 import { EmptyState } from '../components/EmptyState';
 import { RadioCardGroup, CheckboxChipGroup } from '../components/RadioCardGroup';
 import { EstimateResultsPanel } from '../components/EstimateResultsPanel';
+import { LiveImpactPreview } from '../components/LiveImpactPreview';
 import { calculateEstimate } from '../model/calculationEngine';
 import type { AWSPath, ChangeSurface, ConstraintType, PlanningAnswers, ScopeExclusion, SMECoverage } from '../model/types';
 
@@ -91,16 +92,37 @@ export function EstimateWorkspaceView({ onNavigate }: { onNavigate: (v: ViewName
   const questionCount = 12; // normal path; conditional questions never push this above 15 (poc.maxQuestionsWithConditional)
 
   return (
-    <section aria-labelledby="estimate-h1" style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) 320px', gap: 'var(--ms-space-5)' }}>
-      <div style={{ minWidth: 0 }}>
+    <section aria-labelledby="estimate-h1" className="ms-page ms-workspace-grid">
+      <div className="ms-workspace-main">
         <h1 id="estimate-h1">Estimate workspace — {app.applicationName}</h1>
-        <p style={{ color: 'var(--ms-text-muted)' }}>{questionCount} of max {modelConfig.poc.maxQuestionsWithConditional} questions for this estimate. Only "Calculate estimate" commits a result.</p>
+        <p style={{ color: 'var(--ms-text-muted)' }}>{questionCount} of max {modelConfig.poc.maxQuestionsWithConditional} questions for this estimate. Only "Calculate estimate" commits a result — everything before that is a live, non-binding preview.</p>
 
-        <ol style={{ display: 'flex', gap: 'var(--ms-space-2)', listStyle: 'none', padding: 0, marginBottom: 'var(--ms-space-4)' }}>
+        <ol className="ms-step-nav" style={{ display: 'flex', gap: 'var(--ms-space-2)', listStyle: 'none', padding: 0, marginBottom: 'var(--ms-space-4)', flexWrap: 'wrap' }}>
           {([1, 2, 3] as const).map((s) => (
             <li key={s}>
-              <button className="ms-btn ms-btn-secondary" aria-current={step === s ? 'step' : undefined} onClick={() => setStep(s)} style={{ borderColor: step === s ? 'var(--ms-accent)' : undefined }}>
-                {s}. {s === 1 ? 'Migration intent' : s === 2 ? 'People and readiness' : 'Confirmation'}
+              <button
+                className="ms-btn ms-btn-secondary"
+                aria-current={step === s ? 'step' : undefined}
+                onClick={() => setStep(s)}
+                style={
+                  step === s
+                    ? { borderColor: 'var(--ms-accent)', background: 'var(--ms-bg-sunken)', boxShadow: '0 0 0 1px var(--ms-accent) inset' }
+                    : undefined
+                }
+              >
+                <span
+                  aria-hidden="true"
+                  style={{
+                    display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                    width: 20, height: 20, borderRadius: '50%', marginRight: 8,
+                    background: step === s ? 'var(--ms-accent)' : 'var(--ms-bg-sunken)',
+                    color: step === s ? 'var(--ms-accent-contrast)' : 'var(--ms-text-muted)',
+                    fontSize: '0.75rem', fontWeight: 700,
+                  }}
+                >
+                  {s}
+                </span>
+                {s === 1 ? 'Migration intent' : s === 2 ? 'People and readiness' : 'Confirmation'}
               </button>
             </li>
           ))}
@@ -259,32 +281,11 @@ export function EstimateWorkspaceView({ onNavigate }: { onNavigate: (v: ViewName
         )}
       </div>
 
-      <aside aria-label="Live preview" style={{ alignSelf: 'start', position: 'sticky', top: 'var(--ms-space-4)' }} className="ms-card">
-        <h2 style={{ marginTop: 0 }}>Live preview</h2>
-        <p style={{ color: 'var(--ms-text-muted)', fontSize: '0.85rem' }}>Updates as you answer. Not yet committed.</p>
-        {liveResult && (
-          <>
-            {/* Restrained live region: announce a short summary, not the full list, on every change. */}
-            <p aria-live="polite" className="ms-visually-hidden">
-              Updated preview: {liveResult.expectedEffortWeeks.toFixed(1)} person-weeks, {liveResult.riskBand} risk, {liveResult.confidenceBand} confidence.
-            </p>
-            <ul style={{ paddingLeft: 'var(--ms-space-4)' }}>
-              <li>Expected: {liveResult.expectedEffortWeeks.toFixed(1)} pw</li>
-              <li>Range: {liveResult.optimisticEffortWeeks.toFixed(1)}–{liveResult.conservativeEffortWeeks.toFixed(1)} pw</li>
-              <li>Risk: {liveResult.riskBand}</li>
-              <li>Confidence: {liveResult.confidenceBand}</li>
-              <li>Wave: {liveResult.waveSuitability}</li>
-            </ul>
-          </>
-        )}
-      </aside>
-
-      <style>{`
-        @media (max-width: 900px) {
-          section[aria-labelledby="estimate-h1"] { display: block !important; }
-          aside[aria-label="Live preview"] { position: static !important; margin-top: var(--ms-space-4); }
-        }
-      `}</style>
+      <LiveImpactPreview
+        current={liveResult}
+        baseline={committedResult ?? null}
+        note={committedResult ? 'Updates as you answer, compared against the last committed result.' : 'Updates as you answer. Not yet committed.'}
+      />
     </section>
   );
 }

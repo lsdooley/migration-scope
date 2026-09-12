@@ -8,7 +8,7 @@ export function AboutView() {
   const lastImport = importLog[0];
 
   return (
-    <section aria-labelledby="about-h1">
+    <section aria-labelledby="about-h1" className="ms-page">
       <h1 id="about-h1">About and provenance</h1>
 
       <div className="ms-card">

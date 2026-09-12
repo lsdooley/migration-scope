@@ -2,6 +2,7 @@ import { createContext, useCallback, useContext, useMemo, useState, type ReactNo
 import type { ApplicationRecord, AWSPath, EstimateResult, PlanningAnswers, ProvenanceInfo } from '../model/types';
 import { defaultModelConfig, type ModelConfig } from '../model/modelConfig';
 import type { ImportResult } from '../parsers/csvParser';
+import { coerceCorrectionValue } from '../model/normalizer';
 
 // All state lives in memory for this POC — no localStorage/sessionStorage,
 // no backend. Refreshing the page starts over by design.
@@ -69,7 +70,7 @@ interface AppStateApi extends AppState {
   updateDraftAnswers: (appId: string, answers: PlanningAnswers) => void;
   commitEstimate: (appId: string, estimate: EstimateResult) => void;
   confirmProfile: (appId: string) => void;
-  addCorrection: (appId: string, field: string, value: unknown, reason: string) => void;
+  addCorrection: (appId: string, field: string, rawValue: string, reason: string) => void;
   recordImport: (result: ImportResult) => void;
   setModelConfig: (config: ModelConfig) => void;
   resetModelConfig: () => void;
@@ -121,22 +122,28 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     setProfileConfirmedByAppId((prev) => ({ ...prev, [appId]: true }));
   }, []);
 
-  const addCorrection = useCallback((appId: string, field: string, value: unknown, reason: string) => {
+  const addCorrection = useCallback((appId: string, field: string, rawValue: string, reason: string) => {
     const correctedAt = new Date().toISOString();
-    setCorrectionsByAppId((prev) => ({
-      ...prev,
-      [appId]: { ...prev[appId], [field]: { field, value, reason, correctedAt } },
-    }));
+    const coercedValue = coerceCorrectionValue(field, rawValue);
     setApplications((prev) =>
       prev.map((a) => {
         if (a.applicationId !== appId) return a;
+        const previousValue = (a as unknown as Record<string, unknown>)[field];
         const provenance: Record<string, ProvenanceInfo> = {
           ...a.provenance,
-          [field]: { source: 'User corrected', timestamp: correctedAt, correction: { reason, correctedAt, previousValue: (a as unknown as Record<string, unknown>)[field] } },
+          [field]: { source: 'User corrected', timestamp: correctedAt, correction: { reason, correctedAt, previousValue } },
         };
-        return { ...a, provenance };
+        // The correction becomes the value the calculation engine and every
+        // downstream view use — the original imported snapshot lives on in
+        // provenance.correction.previousValue for audit, never silently lost,
+        // but a "correction" that never changes anything isn't a correction.
+        return { ...a, [field]: coercedValue, provenance };
       }),
     );
+    setCorrectionsByAppId((prev) => ({
+      ...prev,
+      [appId]: { ...prev[appId], [field]: { field, value: coercedValue, reason, correctedAt } },
+    }));
   }, []);
 
   const recordImport = useCallback((result: ImportResult) => {

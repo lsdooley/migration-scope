@@ -201,9 +201,9 @@ export function EstimateResultsPanel({ result, app }: { result: EstimateResult; 
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="ms-card" style={{ padding: 'var(--ms-space-3)', minWidth: 140 }}>
-      <div style={{ fontSize: '0.8rem', color: 'var(--ms-text-muted)' }}>{label}</div>
-      <div style={{ fontSize: '1.1rem', fontWeight: 700 }}>{value}</div>
+    <div className="ms-stat">
+      <div className="ms-stat-label">{label}</div>
+      <div className="ms-stat-value">{value}</div>
     </div>
   );
 }

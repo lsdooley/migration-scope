@@ -73,7 +73,7 @@ export function ImportView() {
   }
 
   return (
-    <section aria-labelledby="import-h1">
+    <section aria-labelledby="import-h1" className="ms-page">
       <h1 id="import-h1">Import data</h1>
       <p>Accepts ServiceNow/CMDB exports as <code>.csv</code>, <code>.md</code>, or <code>.markdown</code>. Uploaded content is never executed — every field is treated as untrusted text.</p>
 

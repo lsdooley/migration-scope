@@ -12,6 +12,8 @@
   --ms-space-5: 24px;
   --ms-space-6: 32px;
   --ms-target-min: 44px;
+  --ms-page-max: 1180px;
+  --ms-transition: 140ms ease;
 
   /* severity scale 0-4 colors, shared across badges/risk chips */
   --ms-sev-0: #2f855a;
@@ -19,6 +21,21 @@
   --ms-sev-2: #b7791f;
   --ms-sev-3: #dd6b20;
   --ms-sev-4: #c53030;
+
+  /* semantic colors for "better/worse" delta indicators, independent of theme */
+  --ms-good: #1e7a43;
+  --ms-bad: #c53030;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ms-good: #4fba81;
+    --ms-bad: #f29a9a;
+  }
+}
+:root[data-theme='dark'] {
+  --ms-good: #4fba81;
+  --ms-bad: #f29a9a;
 }
 
 :root,
@@ -40,6 +57,9 @@
   --ms-danger-text: #8a1f1f;
   --ms-synthetic-bg: #eef2ff;
   --ms-synthetic-text: #373fa3;
+  --ms-shadow-sm: 0 1px 2px rgba(23, 26, 31, 0.06);
+  --ms-shadow-md: 0 8px 24px rgba(23, 26, 31, 0.1);
+  --ms-shadow-lift: 0 -6px 20px rgba(23, 26, 31, 0.14);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -61,6 +81,9 @@
     --ms-danger-text: #f29a9a;
     --ms-synthetic-bg: #21224a;
     --ms-synthetic-text: #b9c0ff;
+    --ms-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
+    --ms-shadow-md: 0 8px 24px rgba(0, 0, 0, 0.45);
+    --ms-shadow-lift: 0 -6px 24px rgba(0, 0, 0, 0.5);
   }
 }
 
@@ -82,6 +105,9 @@
   --ms-danger-text: #f29a9a;
   --ms-synthetic-bg: #21224a;
   --ms-synthetic-text: #b9c0ff;
+  --ms-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --ms-shadow-md: 0 8px 24px rgba(0, 0, 0, 0.45);
+  --ms-shadow-lift: 0 -6px 24px rgba(0, 0, 0, 0.5);
 }
 
 * {
@@ -108,6 +134,41 @@ body {
 
 a {
   color: var(--ms-accent);
+}
+
+/* Typographic scale — gives views real hierarchy instead of browser defaults. */
+h1, h2, h3 {
+  line-height: 1.25;
+  font-weight: 700;
+}
+
+h1 {
+  font-size: 1.75rem;
+  margin: 0 0 var(--ms-space-2);
+}
+
+h2 {
+  font-size: 1.25rem;
+  margin: var(--ms-space-5) 0 var(--ms-space-2);
+}
+
+h3 {
+  font-size: 1rem;
+  margin: var(--ms-space-4) 0 var(--ms-space-1);
+  color: var(--ms-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+/* Every view's content is capped to a comfortable reading/scanning width and
+   centered — full-bleed text on a wide monitor is a real usability problem. */
+.ms-page {
+  max-width: var(--ms-page-max);
+  margin: 0 auto;
+}
+
+p {
+  margin: 0 0 var(--ms-space-3);
 }
 
 button,
@@ -172,16 +233,28 @@ button {
   background: var(--ms-bg-elevated);
   color: var(--ms-text);
   font-weight: 600;
+  transition: border-color var(--ms-transition), background-color var(--ms-transition), transform var(--ms-transition), box-shadow var(--ms-transition);
 }
 
 .ms-btn:hover {
   border-color: var(--ms-accent);
+  background: var(--ms-bg-sunken);
+}
+
+.ms-btn:active {
+  transform: scale(0.98);
 }
 
 .ms-btn-primary {
   background: var(--ms-accent);
   color: var(--ms-accent-contrast);
   border-color: var(--ms-accent);
+  box-shadow: var(--ms-shadow-sm);
+}
+
+.ms-btn-primary:hover {
+  filter: brightness(1.08);
+  background: var(--ms-accent);
 }
 
 .ms-btn-primary:disabled,
@@ -204,6 +277,11 @@ button {
   border: 1px solid var(--ms-border);
   border-radius: var(--ms-radius-lg);
   padding: var(--ms-space-4);
+  box-shadow: var(--ms-shadow-sm);
+}
+
+.ms-card + .ms-card {
+  margin-top: var(--ms-space-4);
 }
 
 .ms-badge {
@@ -259,6 +337,13 @@ button {
   border: 1px solid var(--ms-border-strong);
   background: var(--ms-bg-elevated);
   color: var(--ms-text);
+  transition: border-color var(--ms-transition), box-shadow var(--ms-transition);
+}
+
+.ms-field input[type='text']:hover,
+.ms-field input[type='number']:hover,
+.ms-field select:hover {
+  border-color: var(--ms-accent);
 }
 
 .ms-radio-cards {
@@ -275,11 +360,17 @@ button {
   padding: var(--ms-space-3);
   min-height: var(--ms-target-min);
   cursor: pointer;
+  transition: border-color var(--ms-transition), background-color var(--ms-transition), box-shadow var(--ms-transition);
+}
+
+.ms-radio-card:hover {
+  border-color: var(--ms-accent);
 }
 
 .ms-radio-card:has(input:checked) {
   border-color: var(--ms-accent);
   background: var(--ms-bg-sunken);
+  box-shadow: 0 0 0 1px var(--ms-accent) inset;
 }
 
 .ms-table-wrap {
@@ -297,6 +388,24 @@ table.ms-table td {
   text-align: left;
   padding: var(--ms-space-2) var(--ms-space-3);
   border-bottom: 1px solid var(--ms-border);
+}
+
+table.ms-table thead th {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--ms-text-muted);
+  font-weight: 700;
+  border-bottom: 2px solid var(--ms-border-strong);
+  white-space: nowrap;
+}
+
+table.ms-table tbody tr {
+  transition: background-color var(--ms-transition);
+}
+
+table.ms-table tbody tr:hover {
+  background: var(--ms-bg-sunken);
 }
 
 @media (max-width: 640px) {
@@ -365,4 +474,138 @@ table.ms-table td {
   border-radius: var(--ms-radius-md);
   padding: var(--ms-space-3);
   border: 1px solid var(--ms-warning-text);
+}
+
+/* ---------------------------------------------------------------------
+   Workspace layout: main content + a live preview that is ALWAYS visible.
+   Desktop/tablet: sticky sidebar. Phone: pinned bottom sheet that stays
+   on screen while the form scrolls underneath it.
+   --------------------------------------------------------------------- */
+
+.ms-workspace-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: var(--ms-space-5);
+  align-items: start;
+}
+
+.ms-workspace-grid > .ms-workspace-main {
+  min-width: 0;
+}
+
+.ms-live-preview {
+  position: sticky;
+  top: var(--ms-space-4);
+  border: 1px solid var(--ms-border);
+  box-shadow: var(--ms-shadow-md);
+}
+
+@media (max-width: 900px) {
+  .ms-workspace-grid {
+    display: block;
+    padding-bottom: 148px; /* room for the pinned bottom sheet */
+  }
+  .ms-live-preview {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 25;
+    border-radius: var(--ms-radius-lg) var(--ms-radius-lg) 0 0;
+    box-shadow: var(--ms-shadow-lift);
+    max-height: 45vh;
+    overflow-y: auto;
+    margin: 0;
+  }
+}
+
+.ms-live-preview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ms-space-2);
+  margin-bottom: var(--ms-space-2);
+}
+
+.ms-live-dot {
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--ms-good);
+  display: inline-block;
+  animation: ms-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes ms-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+.ms-live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ms-good);
+}
+
+.ms-preview-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--ms-space-3);
+  padding: var(--ms-space-2) 0;
+  border-bottom: 1px solid var(--ms-border);
+}
+
+.ms-preview-row:last-child {
+  border-bottom: none;
+}
+
+.ms-preview-label {
+  color: var(--ms-text-muted);
+  font-size: 0.85rem;
+}
+
+.ms-preview-value {
+  font-weight: 700;
+  text-align: right;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.ms-delta {
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.ms-delta-better { color: var(--ms-good); }
+.ms-delta-worse { color: var(--ms-bad); }
+.ms-delta-neutral { color: var(--ms-text-muted); }
+
+/* Stat tiles used in results summaries */
+.ms-stat {
+  background: var(--ms-bg-sunken);
+  border: 1px solid var(--ms-border);
+  border-radius: var(--ms-radius-md);
+  padding: var(--ms-space-3);
+  min-width: 140px;
+  flex: 1 1 140px;
+}
+
+.ms-stat-label {
+  font-size: 0.78rem;
+  color: var(--ms-text-muted);
+  margin-bottom: 2px;
+}
+
+.ms-stat-value {
+  font-size: 1.2rem;
+  font-weight: 700;
 }

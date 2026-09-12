@@ -315,3 +315,29 @@ export function normalizeRawRow(raw: RawApplicationRow): Omit<ApplicationRecord,
     cmdbCompliance: toNullableNumber(raw.cmdb_compliance),
   };
 }
+
+const NUMERIC_CORRECTION_FIELDS = new Set([
+  'upstreamDependencyCount', 'downstreamDependencyCount', 'integrationCount',
+  'criticalDependencyCount', 'externalDependencyCount', 'sharedPlatformDependencyCount',
+  'criticalIntegrationCount', 'externalPartyIntegrationCount', 'realTimeIntegrationCount',
+  'incidentSev1_12m', 'incidentSev2_12m',
+]);
+const RATE_CORRECTION_FIELDS = new Set(['rtoMinutes', 'rpoMinutes', 'changeFailureRate']);
+const DATE_CORRECTION_FIELDS = new Set(['lastVerifiedDate', 'firstProductionDate', 'lastRecoveryTestDate']);
+
+/**
+ * Coerce a user-typed correction string back into the ApplicationRecord's
+ * real field type, so a saved (or in-progress, unsaved) correction actually
+ * feeds the calculation engine rather than being display-only metadata.
+ */
+export function coerceCorrectionValue(field: string, raw: string): unknown {
+  if (NUMERIC_CORRECTION_FIELDS.has(field)) return toNullableInt(raw);
+  if (RATE_CORRECTION_FIELDS.has(field)) return toNullableNumber(raw);
+  if (DATE_CORRECTION_FIELDS.has(field)) return toNullableDate(raw);
+  if (field === 'architectureStyle') return normalizeArchitectureStyle(raw);
+  if (field === 'businessCriticality') return normalizeCriticality(raw);
+  if (field === 'drTopology') return normalizeDrTopology(raw);
+  if (field === 'customerTransactionExposure') return normalizeCustomerExposure(raw);
+  if (field === 'currentRecoveryTestStatus') return normalizeRecoveryTestStatus(raw);
+  return raw;
+}

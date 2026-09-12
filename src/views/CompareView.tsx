@@ -43,7 +43,7 @@ export function CompareView({ onNavigate }: { onNavigate: (v: ViewName) => void 
   const allWorkPackageIds = [...new Set(results.flatMap((r) => r.trace.workPackages.map((p) => p.id)))];
 
   return (
-    <section aria-labelledby="compare-h1">
+    <section aria-labelledby="compare-h1" className="ms-page">
       <h1 id="compare-h1">Compare paths — {app.applicationName}</h1>
       <p>Pick two or three AWS migration paths. Inputs from the Estimate workspace are reused automatically.</p>
 
