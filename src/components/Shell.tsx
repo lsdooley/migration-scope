@@ -38,12 +38,12 @@ export function Shell({ view, onNavigate, children }: { view: ViewName; onNaviga
       <header
         style={{
           position: 'sticky', top: 0, zIndex: 20, display: 'flex', alignItems: 'center', gap: 'var(--ms-space-3)',
-          padding: 'var(--ms-space-2) var(--ms-space-4)', background: 'var(--ms-bg-elevated)', borderBottom: '1px solid var(--ms-border)',
+          padding: 'var(--ms-space-3) var(--ms-space-5)', background: 'var(--ms-bg-elevated)', borderBottom: '1px solid var(--ms-border)',
           minHeight: 'var(--ms-target-min)', flexWrap: 'wrap',
         }}
       >
         <button
-          className="ms-btn ms-btn-secondary"
+          className="ms-icon-btn"
           aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
           aria-expanded={mobileMenuOpen}
           onClick={() => setMobileMenuOpen((v) => !v)}
@@ -52,7 +52,7 @@ export function Shell({ view, onNavigate, children }: { view: ViewName; onNaviga
         >
           {mobileMenuOpen ? <X size={18} aria-hidden /> : <Menu size={18} aria-hidden />}
         </button>
-        <strong style={{ fontSize: '1.1rem' }}>MigrationScope</strong>
+        <strong style={{ fontSize: '1.15rem', letterSpacing: '-0.01em' }}>MigrationScope</strong>
         <span className="ms-badge" title="Model configuration version">{MODEL_VERSION}</span>
         {syntheticDataLoaded && <span className="ms-badge ms-badge-synthetic">Synthetic ServiceNow test data</span>}
 
@@ -73,14 +73,14 @@ export function Shell({ view, onNavigate, children }: { view: ViewName; onNaviga
             <span style={{ fontSize: '0.9rem', color: 'var(--ms-text-muted)' }}>No application selected</span>
           )}
 
-          <div role="group" aria-label="Theme">
-            <button className="ms-btn ms-btn-secondary" aria-pressed={theme === 'light'} onClick={() => setTheme('light')} aria-label="Light theme" title="Light theme">
+          <div role="group" aria-label="Theme" style={{ display: 'flex', gap: 2, background: 'var(--ms-bg-sunken)', borderRadius: 'var(--ms-radius-md)', padding: 2 }}>
+            <button className="ms-icon-btn" aria-pressed={theme === 'light'} onClick={() => setTheme('light')} aria-label="Light theme" title="Light theme">
               <Sun size={18} aria-hidden />
             </button>
-            <button className="ms-btn ms-btn-secondary" aria-pressed={theme === 'dark'} onClick={() => setTheme('dark')} aria-label="Dark theme" title="Dark theme">
+            <button className="ms-icon-btn" aria-pressed={theme === 'dark'} onClick={() => setTheme('dark')} aria-label="Dark theme" title="Dark theme">
               <Moon size={18} aria-hidden />
             </button>
-            <button className="ms-btn ms-btn-secondary" aria-pressed={theme === 'system'} onClick={() => setTheme('system')} aria-label="System theme" title="Match system">
+            <button className="ms-icon-btn" aria-pressed={theme === 'system'} onClick={() => setTheme('system')} aria-label="System theme" title="Match system">
               <Laptop size={18} aria-hidden />
             </button>
           </div>
@@ -94,45 +94,37 @@ export function Shell({ view, onNavigate, children }: { view: ViewName; onNaviga
           data-mobile-open={mobileMenuOpen}
           id="ms-primary-nav"
           style={{
-            width: railCollapsed ? 64 : 240,
+            width: railCollapsed ? 68 : 248,
             flexShrink: 0,
-            borderRight: '1px solid var(--ms-border)',
-            background: 'var(--ms-bg-elevated)',
-            padding: 'var(--ms-space-3)',
+            background: 'var(--ms-bg)',
+            padding: 'var(--ms-space-4) var(--ms-space-3)',
             display: 'flex',
             flexDirection: 'column',
             gap: 'var(--ms-space-1)',
           }}
         >
           <button
-            className="ms-btn ms-btn-secondary"
+            className="ms-icon-btn"
             onClick={() => setRailCollapsed((v) => !v)}
             aria-label={railCollapsed ? 'Expand navigation' : 'Collapse navigation'}
-            style={{ alignSelf: 'flex-end', marginBottom: 'var(--ms-space-2)' }}
+            style={{ alignSelf: 'flex-end', marginBottom: 'var(--ms-space-3)' }}
           >
             <Menu size={18} aria-hidden />
           </button>
-          <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: 4 }}>
+          <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: 2 }}>
             {NAV_ITEMS.map(({ view: v, label, icon: Icon }) => (
               <li key={v}>
                 <button
-                  className="ms-btn ms-btn-secondary"
+                  className={`ms-nav-btn${view === v ? ' is-active' : ''}`}
                   aria-current={view === v ? 'page' : undefined}
                   onClick={() => {
                     onNavigate(v);
                     setMobileMenuOpen(false);
                   }}
-                  style={{
-                    width: '100%',
-                    justifyContent: railCollapsed ? 'center' : 'flex-start',
-                    display: 'flex',
-                    gap: 'var(--ms-space-2)',
-                    border: view === v ? '1px solid var(--ms-accent)' : '1px solid transparent',
-                    background: view === v ? 'var(--ms-bg-sunken)' : 'transparent',
-                  }}
+                  style={{ justifyContent: railCollapsed ? 'center' : 'flex-start' }}
                   title={label}
                 >
-                  <Icon size={18} aria-hidden />
+                  <Icon size={18} aria-hidden style={{ flexShrink: 0 }} />
                   {!railCollapsed && <span>{label}</span>}
                 </button>
               </li>
@@ -152,7 +144,7 @@ export function Shell({ view, onNavigate, children }: { view: ViewName; onNaviga
           #ms-mobile-menu-toggle { display: inline-flex !important; }
           #ms-primary-nav {
             position: fixed; inset: 0 auto 0 0; z-index: 30; transform: translateX(-100%);
-            transition: transform 0.2s ease; width: 260px !important; box-shadow: 2px 0 12px rgba(0,0,0,0.2);
+            transition: transform 0.2s ease; width: 260px !important; box-shadow: var(--ms-shadow-md);
           }
           #ms-primary-nav[data-mobile-open="true"] { transform: translateX(0); }
         }

@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { GitCompare } from 'lucide-react';
 import { useAppState, defaultPlanningAnswers } from '../state/appState';
 import type { ViewName } from '../state/appState';
 import { EmptyState } from '../components/EmptyState';
@@ -25,6 +26,7 @@ export function CompareView({ onNavigate }: { onNavigate: (v: ViewName) => void 
   if (!app) {
     return (
       <EmptyState
+        icon={GitCompare}
         title="No application selected"
         description="Select an application to compare AWS migration paths."
         primaryAction={<button className="ms-btn ms-btn-primary" onClick={() => onNavigate('applications')}>Go to Applications</button>}
@@ -63,7 +65,8 @@ export function CompareView({ onNavigate }: { onNavigate: (v: ViewName) => void 
         <p className="ms-inline-warning" role="alert">Select at least two paths to compare.</p>
       ) : (
         <>
-          <div className="ms-table-wrap ms-table-cards">
+          <div className="ms-table-card">
+            <div className="ms-table-wrap ms-table-cards">
             <table className="ms-table">
               <thead>
                 <tr>
@@ -82,10 +85,12 @@ export function CompareView({ onNavigate }: { onNavigate: (v: ViewName) => void 
                 <Row label="Wave suitability" results={results} get={(r) => r.waveSuitability} />
               </tbody>
             </table>
+            </div>
           </div>
 
           <h2>Changed work packages</h2>
-          <div className="ms-table-wrap ms-table-cards">
+          <div className="ms-table-card">
+            <div className="ms-table-wrap ms-table-cards">
             <table className="ms-table">
               <thead>
                 <tr>
@@ -108,6 +113,7 @@ export function CompareView({ onNavigate }: { onNavigate: (v: ViewName) => void 
                 })}
               </tbody>
             </table>
+            </div>
           </div>
         </>
       )}

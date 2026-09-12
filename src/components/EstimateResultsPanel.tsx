@@ -71,14 +71,14 @@ export function EstimateResultsPanel({ result, app }: { result: EstimateResult; 
         <Stat label="Wave suitability" value={result.waveSuitability} />
       </div>
 
-      <div role="tablist" aria-label="Estimate results" style={{ display: 'flex', gap: 4, flexWrap: 'wrap', borderBottom: '1px solid var(--ms-border)', marginBottom: 'var(--ms-space-3)' }}>
+      <div role="tablist" aria-label="Estimate results" className="ms-tabs">
+        <div className="ms-tabs-indicator" style={{ width: `calc(100% / ${TABS.length})`, transform: `translateX(${TABS.findIndex((t) => t.id === tab) * 100}%)` }} aria-hidden="true" />
         {TABS.map((t) => (
           <button
             key={t.id}
             role="tab"
             aria-selected={tab === t.id}
-            className="ms-btn ms-btn-secondary"
-            style={{ borderBottomColor: tab === t.id ? 'var(--ms-accent)' : 'transparent', borderBottomWidth: 2 }}
+            className="ms-tab-btn"
             onClick={() => setTab(t.id)}
           >
             {t.label}

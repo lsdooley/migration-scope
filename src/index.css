@@ -1,10 +1,16 @@
-/* MigrationScope design tokens — light/dark, defaulting to system preference */
+/* MigrationScope design tokens — clean minimal SaaS aesthetic.
+   Whitespace and background-contrast do the work borders used to do;
+   borders are reserved for things that truly need a hard edge
+   (inputs, table row dividers, the pinned mobile preview sheet). */
 
 :root {
+  --ms-font-sans: 'Inter Variable', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   --ms-font-body: 16px;
-  --ms-radius-sm: 6px;
-  --ms-radius-md: 10px;
-  --ms-radius-lg: 16px;
+
+  --ms-radius-sm: 8px;
+  --ms-radius-md: 12px;
+  --ms-radius-lg: 20px;
+
   --ms-space-1: 4px;
   --ms-space-2: 8px;
   --ms-space-3: 12px;
@@ -13,186 +19,151 @@
   --ms-space-6: 32px;
   --ms-target-min: 44px;
   --ms-page-max: 1180px;
-  --ms-transition: 140ms ease;
 
-  /* severity scale 0-4 colors, shared across badges/risk chips */
+  --ms-transition: 140ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ms-transition-slow: 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  /* severity scale 0-4, shared across badges/risk chips */
   --ms-sev-0: #2f855a;
   --ms-sev-1: #3182ce;
   --ms-sev-2: #b7791f;
   --ms-sev-3: #dd6b20;
   --ms-sev-4: #c53030;
 
-  /* semantic colors for "better/worse" delta indicators, independent of theme */
-  --ms-good: #1e7a43;
-  --ms-bad: #c53030;
+  /* "better/worse" delta indicators — same hue family in both themes */
+  --ms-good: #1e7a54;
+  --ms-bad: #c5303f;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --ms-good: #4fba81;
-    --ms-bad: #f29a9a;
-  }
+  :root { --ms-good: #4fd196; --ms-bad: #f2848f; }
 }
-:root[data-theme='dark'] {
-  --ms-good: #4fba81;
-  --ms-bad: #f29a9a;
-}
+:root[data-theme='dark'] { --ms-good: #4fd196; --ms-bad: #f2848f; }
 
 :root,
 :root[data-theme='light'] {
-  --ms-bg: #f7f8fa;
+  --ms-bg: #f6f7fb;
   --ms-bg-elevated: #ffffff;
-  --ms-bg-sunken: #eef0f3;
-  --ms-border: #d7dbe1;
-  --ms-border-strong: #aab1bd;
-  --ms-text: #171a1f;
-  --ms-text-muted: #565e6b;
-  --ms-accent: #1f5fd1;
+  --ms-bg-sunken: #eef0f7;
+  --ms-border: #e4e6ef;
+  --ms-border-strong: #c7cbdc;
+  --ms-text: #14161f;
+  --ms-text-muted: #656a7d;
+
+  --ms-accent: #4a55e6;
+  --ms-accent-hover: #3d47d4;
+  --ms-accent-active: #333cb8;
+  --ms-accent-soft: rgba(74, 85, 230, 0.1);
   --ms-accent-contrast: #ffffff;
-  --ms-focus-ring: #1f5fd1;
-  --ms-success: #1e7a43;
+  --ms-focus-ring: #4a55e6;
+
+  --ms-success: #1e7a54;
   --ms-warning-bg: #fdf1dc;
-  --ms-warning-text: #7a4a08;
-  --ms-danger-bg: #fbe4e4;
-  --ms-danger-text: #8a1f1f;
-  --ms-synthetic-bg: #eef2ff;
-  --ms-synthetic-text: #373fa3;
-  --ms-shadow-sm: 0 1px 2px rgba(23, 26, 31, 0.06);
-  --ms-shadow-md: 0 8px 24px rgba(23, 26, 31, 0.1);
-  --ms-shadow-lift: 0 -6px 20px rgba(23, 26, 31, 0.14);
+  --ms-warning-text: #86530a;
+  --ms-danger-bg: #fbe6e8;
+  --ms-danger-text: #9b2338;
+  --ms-synthetic-bg: #eeeeff;
+  --ms-synthetic-text: #3d3fb0;
+
+  --ms-shadow-sm: 0 1px 2px rgba(20, 22, 31, 0.05), 0 1px 1px rgba(20, 22, 31, 0.04);
+  --ms-shadow-md: 0 12px 28px rgba(20, 22, 31, 0.09), 0 2px 8px rgba(20, 22, 31, 0.06);
+  --ms-shadow-lift: 0 -8px 28px rgba(20, 22, 31, 0.14);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --ms-bg: #13151a;
-    --ms-bg-elevated: #1c1f26;
-    --ms-bg-sunken: #0f1115;
-    --ms-border: #323744;
-    --ms-border-strong: #484f60;
-    --ms-text: #eef0f3;
-    --ms-text-muted: #aab1bd;
-    --ms-accent: #6ea0ff;
-    --ms-accent-contrast: #0b1220;
-    --ms-focus-ring: #6ea0ff;
-    --ms-success: #4fba81;
+    --ms-bg: #101119;
+    --ms-bg-elevated: #191b26;
+    --ms-bg-sunken: #0c0d14;
+    --ms-border: #262838;
+    --ms-border-strong: #3a3d54;
+    --ms-text: #eef0f7;
+    --ms-text-muted: #9a9fb8;
+
+    --ms-accent: #8ea2ff;
+    --ms-accent-hover: #a5b6ff;
+    --ms-accent-active: #b7c4ff;
+    --ms-accent-soft: rgba(142, 162, 255, 0.14);
+    --ms-accent-contrast: #10132b;
+    --ms-focus-ring: #8ea2ff;
+
+    --ms-success: #4fd196;
     --ms-warning-bg: #3a2c0d;
     --ms-warning-text: #f2c55c;
-    --ms-danger-bg: #3a1414;
-    --ms-danger-text: #f29a9a;
-    --ms-synthetic-bg: #21224a;
+    --ms-danger-bg: #3a1620;
+    --ms-danger-text: #f2929e;
+    --ms-synthetic-bg: #20223f;
     --ms-synthetic-text: #b9c0ff;
-    --ms-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
-    --ms-shadow-md: 0 8px 24px rgba(0, 0, 0, 0.45);
-    --ms-shadow-lift: 0 -6px 24px rgba(0, 0, 0, 0.5);
+
+    --ms-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --ms-shadow-md: 0 16px 32px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.4);
+    --ms-shadow-lift: 0 -10px 32px rgba(0, 0, 0, 0.55);
   }
 }
 
 :root[data-theme='dark'] {
-  --ms-bg: #13151a;
-  --ms-bg-elevated: #1c1f26;
-  --ms-bg-sunken: #0f1115;
-  --ms-border: #323744;
-  --ms-border-strong: #484f60;
-  --ms-text: #eef0f3;
-  --ms-text-muted: #aab1bd;
-  --ms-accent: #6ea0ff;
-  --ms-accent-contrast: #0b1220;
-  --ms-focus-ring: #6ea0ff;
-  --ms-success: #4fba81;
+  --ms-bg: #101119;
+  --ms-bg-elevated: #191b26;
+  --ms-bg-sunken: #0c0d14;
+  --ms-border: #262838;
+  --ms-border-strong: #3a3d54;
+  --ms-text: #eef0f7;
+  --ms-text-muted: #9a9fb8;
+
+  --ms-accent: #8ea2ff;
+  --ms-accent-hover: #a5b6ff;
+  --ms-accent-active: #b7c4ff;
+  --ms-accent-soft: rgba(142, 162, 255, 0.14);
+  --ms-accent-contrast: #10132b;
+  --ms-focus-ring: #8ea2ff;
+
+  --ms-success: #4fd196;
   --ms-warning-bg: #3a2c0d;
   --ms-warning-text: #f2c55c;
-  --ms-danger-bg: #3a1414;
-  --ms-danger-text: #f29a9a;
-  --ms-synthetic-bg: #21224a;
+  --ms-danger-bg: #3a1620;
+  --ms-danger-text: #f2929e;
+  --ms-synthetic-bg: #20223f;
   --ms-synthetic-text: #b9c0ff;
-  --ms-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
-  --ms-shadow-md: 0 8px 24px rgba(0, 0, 0, 0.45);
-  --ms-shadow-lift: 0 -6px 24px rgba(0, 0, 0, 0.5);
+
+  --ms-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --ms-shadow-md: 0 16px 32px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.4);
+  --ms-shadow-lift: 0 -10px 32px rgba(0, 0, 0, 0.55);
 }
 
-* {
-  box-sizing: border-box;
-}
+/* ---------------------------------------------------------------- reset */
 
-html,
-body {
-  margin: 0;
-  padding: 0;
-}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
 
 body {
   background: var(--ms-bg);
   color: var(--ms-text);
-  font-family: -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-family: var(--ms-font-sans);
   font-size: var(--ms-font-body);
-  line-height: 1.5;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
 }
 
-#root {
-  min-height: 100vh;
-}
+#root { min-height: 100vh; }
 
-a {
-  color: var(--ms-accent);
-}
+a { color: var(--ms-accent); }
 
-/* Typographic scale — gives views real hierarchy instead of browser defaults. */
-h1, h2, h3 {
-  line-height: 1.25;
-  font-weight: 700;
-}
-
-h1 {
-  font-size: 1.75rem;
-  margin: 0 0 var(--ms-space-2);
-}
-
-h2 {
-  font-size: 1.25rem;
-  margin: var(--ms-space-5) 0 var(--ms-space-2);
-}
-
-h3 {
-  font-size: 1rem;
-  margin: var(--ms-space-4) 0 var(--ms-space-1);
-  color: var(--ms-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-}
-
-/* Every view's content is capped to a comfortable reading/scanning width and
-   centered — full-bleed text on a wide monitor is a real usability problem. */
-.ms-page {
-  max-width: var(--ms-page-max);
-  margin: 0 auto;
-}
-
-p {
-  margin: 0 0 var(--ms-space-3);
-}
-
-button,
-input,
-select,
-textarea {
+button, input, select, textarea {
   font-family: inherit;
   font-size: 16px;
   color: inherit;
 }
 
-button {
-  cursor: pointer;
-}
+button { cursor: pointer; }
 
 :focus-visible {
-  outline: 3px solid var(--ms-focus-ring);
+  outline: 2px solid var(--ms-focus-ring);
   outline-offset: 2px;
+  border-radius: 4px;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
@@ -219,113 +190,142 @@ button {
   z-index: 1000;
   border-radius: 0 0 var(--ms-radius-sm) 0;
 }
+.ms-skip-link:focus { left: 0; }
 
-.ms-skip-link:focus {
-  left: 0;
+/* ------------------------------------------------------------ typography */
+
+h1, h2, h3 { line-height: 1.25; font-weight: 700; letter-spacing: -0.01em; }
+
+h1 { font-size: 1.75rem; margin: 0 0 var(--ms-space-2); letter-spacing: -0.02em; }
+h2 { font-size: 1.25rem; margin: var(--ms-space-5) 0 var(--ms-space-2); }
+h3 {
+  font-size: 0.8rem;
+  margin: var(--ms-space-4) 0 var(--ms-space-1);
+  color: var(--ms-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 700;
 }
+
+p { margin: 0 0 var(--ms-space-3); }
+
+.ms-page { max-width: var(--ms-page-max); margin: 0 auto; }
+
+/* ------------------------------------------------------------- surfaces */
+
+.ms-card {
+  background: var(--ms-bg-elevated);
+  border-radius: var(--ms-radius-lg);
+  padding: var(--ms-space-4);
+  box-shadow: var(--ms-shadow-sm);
+}
+.ms-card + .ms-card { margin-top: var(--ms-space-4); }
+
+/* Spacing-only grouping — use instead of .ms-card when a block doesn't need
+   its own elevated panel, just separation from what's around it. */
+.ms-section { padding: var(--ms-space-3) 0; }
+.ms-section + .ms-section { border-top: 1px solid var(--ms-border); }
+
+/* ---------------------------------------------------------------- badges */
+
+.ms-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ms-space-1);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 3px var(--ms-space-2);
+  border-radius: 999px;
+  background: var(--ms-bg-sunken);
+  color: var(--ms-text-muted);
+  white-space: nowrap;
+}
+.ms-badge-synthetic { background: var(--ms-synthetic-bg); color: var(--ms-synthetic-text); }
+.ms-badge-warning { background: var(--ms-warning-bg); color: var(--ms-warning-text); }
+.ms-badge-danger { background: var(--ms-danger-bg); color: var(--ms-danger-text); }
+
+/* ---------------------------------------------------------------- buttons */
 
 .ms-btn {
   min-height: var(--ms-target-min);
   min-width: var(--ms-target-min);
   padding: var(--ms-space-2) var(--ms-space-4);
   border-radius: var(--ms-radius-md);
-  border: 1px solid var(--ms-border-strong);
-  background: var(--ms-bg-elevated);
+  border: 1px solid transparent;
+  background: transparent;
   color: var(--ms-text);
   font-weight: 600;
-  transition: border-color var(--ms-transition), background-color var(--ms-transition), transform var(--ms-transition), box-shadow var(--ms-transition);
+  transition: background-color var(--ms-transition), border-color var(--ms-transition), color var(--ms-transition), transform var(--ms-transition), box-shadow var(--ms-transition);
 }
 
-.ms-btn:hover {
-  border-color: var(--ms-accent);
-  background: var(--ms-bg-sunken);
+.ms-btn-secondary {
+  background: var(--ms-bg-elevated);
+  border-color: var(--ms-border);
 }
-
-.ms-btn:active {
-  transform: scale(0.98);
-}
+.ms-btn-secondary:hover { border-color: var(--ms-border-strong); background: var(--ms-bg-sunken); }
 
 .ms-btn-primary {
   background: var(--ms-accent);
   color: var(--ms-accent-contrast);
-  border-color: var(--ms-accent);
   box-shadow: var(--ms-shadow-sm);
 }
+.ms-btn-primary:hover { background: var(--ms-accent-hover); }
+.ms-btn-primary:active { background: var(--ms-accent-active); }
 
-.ms-btn-primary:hover {
-  filter: brightness(1.08);
-  background: var(--ms-accent);
-}
+.ms-btn:active { transform: scale(0.97); }
 
-.ms-btn-primary:disabled,
-.ms-btn:disabled {
+.ms-btn-primary:disabled, .ms-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  transform: none;
 }
 
-.ms-btn-secondary {
-  background: transparent;
-}
+.ms-btn-danger { color: var(--ms-danger-text); background: transparent; }
+.ms-btn-danger:hover { background: var(--ms-danger-bg); }
 
-.ms-btn-danger {
-  border-color: var(--ms-danger-text);
-  color: var(--ms-danger-text);
-}
-
-.ms-card {
-  background: var(--ms-bg-elevated);
-  border: 1px solid var(--ms-border);
-  border-radius: var(--ms-radius-lg);
-  padding: var(--ms-space-4);
-  box-shadow: var(--ms-shadow-sm);
-}
-
-.ms-card + .ms-card {
-  margin-top: var(--ms-space-4);
-}
-
-.ms-badge {
+/* Ghost icon buttons: theme toggle, mobile menu, dismiss controls — no box
+   by default, just a soft hover tint. */
+.ms-icon-btn {
   display: inline-flex;
   align-items: center;
-  gap: var(--ms-space-1);
-  font-size: 0.8rem;
-  font-weight: 600;
-  padding: 2px var(--ms-space-2);
-  border-radius: 999px;
-  border: 1px solid var(--ms-border-strong);
-  background: var(--ms-bg-sunken);
-  white-space: nowrap;
+  justify-content: center;
+  min-width: var(--ms-target-min);
+  min-height: var(--ms-target-min);
+  border-radius: var(--ms-radius-md);
+  border: none;
+  background: transparent;
+  color: var(--ms-text-muted);
+  transition: background-color var(--ms-transition), color var(--ms-transition);
+}
+.ms-icon-btn:hover { background: var(--ms-bg-sunken); color: var(--ms-text); }
+.ms-icon-btn[aria-pressed='true'], .ms-icon-btn[aria-current='page'], .ms-icon-btn.is-active {
+  background: var(--ms-accent-soft);
+  color: var(--ms-accent);
 }
 
-.ms-badge-synthetic {
-  background: var(--ms-synthetic-bg);
-  color: var(--ms-synthetic-text);
-  border-color: transparent;
-}
+/* ------------------------------------------------------------ nav (Shell) */
 
-.ms-badge-warning {
-  background: var(--ms-warning-bg);
-  color: var(--ms-warning-text);
-  border-color: transparent;
-}
-
-.ms-badge-danger {
-  background: var(--ms-danger-bg);
-  color: var(--ms-danger-text);
-  border-color: transparent;
-}
-
-.ms-field {
+.ms-nav-btn {
+  width: 100%;
   display: flex;
-  flex-direction: column;
-  gap: var(--ms-space-1);
-  margin-bottom: var(--ms-space-4);
-}
-
-.ms-field label,
-.ms-field legend {
+  align-items: center;
+  gap: var(--ms-space-2);
+  border: none;
+  background: transparent;
+  border-radius: var(--ms-radius-md);
+  padding: var(--ms-space-2) var(--ms-space-3);
+  min-height: var(--ms-target-min);
   font-weight: 600;
+  color: var(--ms-text-muted);
+  transition: background-color var(--ms-transition), color var(--ms-transition);
 }
+.ms-nav-btn:hover { background: var(--ms-bg-sunken); color: var(--ms-text); }
+.ms-nav-btn.is-active { background: var(--ms-accent-soft); color: var(--ms-accent); }
+
+/* --------------------------------------------------------------- fields */
+
+.ms-field { display: flex; flex-direction: column; gap: var(--ms-space-1); margin-bottom: var(--ms-space-4); }
+.ms-field label, .ms-field legend { font-weight: 600; font-size: 0.9rem; }
 
 .ms-field input[type='text'],
 .ms-field input[type='number'],
@@ -334,87 +334,210 @@ button {
   min-height: var(--ms-target-min);
   padding: var(--ms-space-2) var(--ms-space-3);
   border-radius: var(--ms-radius-sm);
-  border: 1px solid var(--ms-border-strong);
-  background: var(--ms-bg-elevated);
+  border: 1px solid var(--ms-border);
+  background: var(--ms-bg-sunken);
   color: var(--ms-text);
-  transition: border-color var(--ms-transition), box-shadow var(--ms-transition);
+  transition: border-color var(--ms-transition), box-shadow var(--ms-transition), background-color var(--ms-transition);
 }
-
 .ms-field input[type='text']:hover,
 .ms-field input[type='number']:hover,
-.ms-field select:hover {
+.ms-field select:hover { border-color: var(--ms-border-strong); }
+.ms-field input[type='text']:focus,
+.ms-field input[type='number']:focus,
+.ms-field select:focus {
+  outline: none;
   border-color: var(--ms-accent);
+  background: var(--ms-bg-elevated);
+  box-shadow: 0 0 0 3px var(--ms-accent-soft);
 }
 
-.ms-radio-cards {
-  display: grid;
-  gap: var(--ms-space-2);
+/* Native checkbox/radio controls pick up the brand color instead of the
+   default browser gray/blue square — a one-line fix for a lot of "dated"
+   feeling with zero extra markup. */
+input[type='checkbox'], input[type='radio'] {
+  accent-color: var(--ms-accent);
+  width: 18px;
+  height: 18px;
 }
+
+/* ---------------------------------------------------- radio cards (variant="cards") */
+
+.ms-radio-cards { display: grid; gap: var(--ms-space-2); }
 
 .ms-radio-card {
+  position: relative;
   display: flex;
   align-items: flex-start;
-  gap: var(--ms-space-2);
-  border: 1px solid var(--ms-border-strong);
+  gap: var(--ms-space-3);
+  border: 1px solid var(--ms-border);
   border-radius: var(--ms-radius-md);
-  padding: var(--ms-space-3);
+  padding: var(--ms-space-3) var(--ms-space-3) var(--ms-space-3) var(--ms-space-4);
   min-height: var(--ms-target-min);
   cursor: pointer;
-  transition: border-color var(--ms-transition), background-color var(--ms-transition), box-shadow var(--ms-transition);
+  background: var(--ms-bg-elevated);
+  transition: border-color var(--ms-transition), background-color var(--ms-transition);
 }
-
-.ms-radio-card:hover {
-  border-color: var(--ms-accent);
-}
-
+.ms-radio-card:hover { border-color: var(--ms-border-strong); }
 .ms-radio-card:has(input:checked) {
   border-color: var(--ms-accent);
+  background: var(--ms-accent-soft);
+}
+.ms-radio-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: var(--ms-space-2); bottom: var(--ms-space-2);
+  width: 3px;
+  border-radius: 999px;
+  background: transparent;
+  transition: background-color var(--ms-transition);
+}
+.ms-radio-card:has(input:checked)::before { background: var(--ms-accent); }
+
+/* --------------------------------------------------- segmented control (variant="segmented") */
+
+.ms-segmented {
+  display: inline-grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 2px;
   background: var(--ms-bg-sunken);
-  box-shadow: 0 0 0 1px var(--ms-accent) inset;
-}
-
-.ms-table-wrap {
-  overflow-x: auto;
-}
-
-table.ms-table {
+  border-radius: var(--ms-radius-md);
+  padding: 3px;
   width: 100%;
-  border-collapse: collapse;
-  min-width: 640px;
+}
+.ms-segmented-option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 38px;
+  border-radius: calc(var(--ms-radius-md) - 3px);
+  padding: var(--ms-space-1) var(--ms-space-2);
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--ms-text-muted);
+  cursor: pointer;
+  transition: background-color var(--ms-transition), color var(--ms-transition), box-shadow var(--ms-transition);
+}
+.ms-segmented-option:hover { color: var(--ms-text); }
+.ms-segmented-option:has(input:checked) {
+  background: var(--ms-bg-elevated);
+  color: var(--ms-accent);
+  box-shadow: var(--ms-shadow-sm);
+}
+.ms-segmented-option input { position: absolute; opacity: 0; pointer-events: none; }
+
+/* ------------------------------------------------------------------ chips */
+
+.ms-chip-group { display: flex; gap: var(--ms-space-2); flex-wrap: wrap; }
+.ms-chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 38px;
+  padding: 6px var(--ms-space-3);
+  border-radius: 999px;
+  border: 1px solid var(--ms-border);
+  background: var(--ms-bg-elevated);
+  color: var(--ms-text);
+  font-weight: 600;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: background-color var(--ms-transition), border-color var(--ms-transition), color var(--ms-transition);
+}
+.ms-chip:hover { border-color: var(--ms-border-strong); }
+.ms-chip:has(input:checked) {
+  background: var(--ms-accent);
+  border-color: var(--ms-accent);
+  color: var(--ms-accent-contrast);
+}
+.ms-chip input { position: absolute; opacity: 0; pointer-events: none; }
+
+/* -------------------------------------------------------------- tab bar */
+
+.ms-tabs {
+  position: relative;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  background: var(--ms-bg-sunken);
+  border-radius: var(--ms-radius-md);
+  padding: 3px;
+  gap: 0;
+  margin-bottom: var(--ms-space-3);
+}
+.ms-tabs-indicator {
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  left: 3px;
+  border-radius: calc(var(--ms-radius-md) - 3px);
+  background: var(--ms-bg-elevated);
+  box-shadow: var(--ms-shadow-sm);
+  transition: transform var(--ms-transition-slow);
+  z-index: 0;
+}
+.ms-tab-btn {
+  position: relative;
+  z-index: 1;
+  border: none;
+  background: transparent;
+  min-height: 40px;
+  padding: var(--ms-space-1) var(--ms-space-2);
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: var(--ms-text-muted);
+  border-radius: calc(var(--ms-radius-md) - 3px);
+  transition: color var(--ms-transition);
+  white-space: nowrap;
+}
+.ms-tab-btn[aria-selected='true'] { color: var(--ms-accent); }
+
+/* ------------------------------------------------------------------ tables */
+
+.ms-table-card {
+  background: var(--ms-bg-elevated);
+  border-radius: var(--ms-radius-lg);
+  box-shadow: var(--ms-shadow-sm);
+  overflow: hidden;
 }
 
-table.ms-table th,
-table.ms-table td {
+.ms-table-wrap { overflow-x: auto; }
+
+table.ms-table { width: 100%; border-collapse: collapse; min-width: 640px; }
+
+table.ms-table th, table.ms-table td {
   text-align: left;
-  padding: var(--ms-space-2) var(--ms-space-3);
+  padding: var(--ms-space-3) var(--ms-space-3);
   border-bottom: 1px solid var(--ms-border);
 }
+.ms-table-card table.ms-table th:first-child,
+.ms-table-card table.ms-table td:first-child { padding-left: var(--ms-space-4); }
+.ms-table-card table.ms-table th:last-child,
+.ms-table-card table.ms-table td:last-child { padding-right: var(--ms-space-4); }
 
 table.ms-table thead th {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.05em;
   color: var(--ms-text-muted);
   font-weight: 700;
-  border-bottom: 2px solid var(--ms-border-strong);
+  background: var(--ms-bg-sunken);
+  border-bottom: 1px solid var(--ms-border);
   white-space: nowrap;
 }
 
-table.ms-table tbody tr {
-  transition: background-color var(--ms-transition);
-}
-
-table.ms-table tbody tr:hover {
-  background: var(--ms-bg-sunken);
-}
+table.ms-table tbody tr { transition: background-color var(--ms-transition); }
+table.ms-table tbody tr:hover { background: var(--ms-bg-sunken); }
+table.ms-table tbody tr:last-child td { border-bottom: none; }
 
 @media (max-width: 640px) {
   /* Tables transform into stacked cards on narrow screens instead of forcing
      horizontal scroll — thead is dropped and each cell's data-label stands in
      for the column header. */
-  .ms-table-cards table.ms-table thead {
-    display: none;
-  }
+  .ms-table-cards table.ms-table thead { display: none; }
   .ms-table-cards table.ms-table,
   .ms-table-cards table.ms-table tbody,
   .ms-table-cards table.ms-table tr,
@@ -446,41 +569,10 @@ table.ms-table tbody tr:hover {
     color: var(--ms-text-muted);
     text-align: left;
   }
+  .ms-table-card .ms-table-cards { padding: var(--ms-space-3); }
 }
 
-.ms-skeleton {
-  background: linear-gradient(90deg, var(--ms-bg-sunken), var(--ms-border), var(--ms-bg-sunken));
-  border-radius: var(--ms-radius-sm);
-  height: 1.2em;
-}
-
-.ms-inline-error {
-  background: var(--ms-danger-bg);
-  color: var(--ms-danger-text);
-  border-radius: var(--ms-radius-md);
-  padding: var(--ms-space-3);
-  border: 1px solid var(--ms-danger-text);
-}
-
-@media print {
-  header, nav, .ms-skip-link, button { display: none !important; }
-  main { overflow: visible !important; padding: 0 !important; }
-  .ms-card { border: 1px solid #000 !important; break-inside: avoid; }
-}
-
-.ms-inline-warning {
-  background: var(--ms-warning-bg);
-  color: var(--ms-warning-text);
-  border-radius: var(--ms-radius-md);
-  padding: var(--ms-space-3);
-  border: 1px solid var(--ms-warning-text);
-}
-
-/* ---------------------------------------------------------------------
-   Workspace layout: main content + a live preview that is ALWAYS visible.
-   Desktop/tablet: sticky sidebar. Phone: pinned bottom sheet that stays
-   on screen while the form scrolls underneath it.
-   --------------------------------------------------------------------- */
+/* ------------------------------------------------------- workspace + live preview */
 
 .ms-workspace-grid {
   display: grid;
@@ -488,28 +580,19 @@ table.ms-table tbody tr:hover {
   gap: var(--ms-space-5);
   align-items: start;
 }
-
-.ms-workspace-grid > .ms-workspace-main {
-  min-width: 0;
-}
+.ms-workspace-grid > .ms-workspace-main { min-width: 0; }
 
 .ms-live-preview {
   position: sticky;
   top: var(--ms-space-4);
-  border: 1px solid var(--ms-border);
   box-shadow: var(--ms-shadow-md);
 }
 
 @media (max-width: 900px) {
-  .ms-workspace-grid {
-    display: block;
-    padding-bottom: 148px; /* room for the pinned bottom sheet */
-  }
+  .ms-workspace-grid { display: block; padding-bottom: 168px; }
   .ms-live-preview {
     position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    left: 0; right: 0; bottom: 0;
     z-index: 25;
     border-radius: var(--ms-radius-lg) var(--ms-radius-lg) 0 0;
     box-shadow: var(--ms-shadow-lift);
@@ -528,29 +611,26 @@ table.ms-table tbody tr:hover {
 }
 
 .ms-live-dot {
-  width: 8px;
-  height: 8px;
-  flex-shrink: 0;
+  width: 8px; height: 8px; flex-shrink: 0;
   border-radius: 50%;
   background: var(--ms-good);
   display: inline-block;
   animation: ms-pulse 1.6s ease-in-out infinite;
 }
-
-@keyframes ms-pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.35; }
-}
+@keyframes ms-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
 
 .ms-live-badge {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.05em;
   color: var(--ms-good);
+  background: color-mix(in srgb, var(--ms-good) 12%, transparent);
+  padding: 3px var(--ms-space-2);
+  border-radius: 999px;
 }
 
 .ms-preview-row {
@@ -561,51 +641,70 @@ table.ms-table tbody tr:hover {
   padding: var(--ms-space-2) 0;
   border-bottom: 1px solid var(--ms-border);
 }
-
-.ms-preview-row:last-child {
-  border-bottom: none;
-}
-
-.ms-preview-label {
-  color: var(--ms-text-muted);
-  font-size: 0.85rem;
-}
-
-.ms-preview-value {
-  font-weight: 700;
-  text-align: right;
-  display: flex;
-  align-items: baseline;
-  gap: 6px;
-}
+.ms-preview-row:last-child { border-bottom: none; }
+.ms-preview-label { color: var(--ms-text-muted); font-size: 0.85rem; }
+.ms-preview-value { font-weight: 700; text-align: right; display: flex; align-items: baseline; gap: 6px; }
 
 .ms-delta {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 700;
   white-space: nowrap;
+  padding: 2px 7px;
+  border-radius: 999px;
 }
+.ms-delta-better { color: var(--ms-good); background: color-mix(in srgb, var(--ms-good) 12%, transparent); }
+.ms-delta-worse { color: var(--ms-bad); background: color-mix(in srgb, var(--ms-bad) 12%, transparent); }
+.ms-delta-neutral { color: var(--ms-text-muted); background: var(--ms-bg-sunken); }
 
-.ms-delta-better { color: var(--ms-good); }
-.ms-delta-worse { color: var(--ms-bad); }
-.ms-delta-neutral { color: var(--ms-text-muted); }
+/* -------------------------------------------------------------- stat tiles */
 
-/* Stat tiles used in results summaries */
 .ms-stat {
   background: var(--ms-bg-sunken);
-  border: 1px solid var(--ms-border);
   border-radius: var(--ms-radius-md);
   padding: var(--ms-space-3);
   min-width: 140px;
   flex: 1 1 140px;
 }
+.ms-stat-label { font-size: 0.78rem; color: var(--ms-text-muted); margin-bottom: 2px; }
+.ms-stat-value { font-size: 1.2rem; font-weight: 700; }
 
-.ms-stat-label {
-  font-size: 0.78rem;
-  color: var(--ms-text-muted);
-  margin-bottom: 2px;
+/* ------------------------------------------------------------- empty state */
+
+.ms-empty-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--ms-accent-soft);
+  color: var(--ms-accent);
+  margin-bottom: var(--ms-space-3);
 }
 
-.ms-stat-value {
-  font-size: 1.2rem;
-  font-weight: 700;
+/* -------------------------------------------------------------- feedback */
+
+.ms-skeleton {
+  background: linear-gradient(90deg, var(--ms-bg-sunken), var(--ms-border), var(--ms-bg-sunken));
+  border-radius: var(--ms-radius-sm);
+  height: 1.2em;
+}
+
+.ms-inline-error {
+  background: var(--ms-danger-bg);
+  color: var(--ms-danger-text);
+  border-radius: var(--ms-radius-md);
+  padding: var(--ms-space-3);
+}
+.ms-inline-warning {
+  background: var(--ms-warning-bg);
+  color: var(--ms-warning-text);
+  border-radius: var(--ms-radius-md);
+  padding: var(--ms-space-3);
+}
+
+@media print {
+  header, nav, .ms-skip-link, button { display: none !important; }
+  main { overflow: visible !important; padding: 0 !important; }
+  .ms-card, .ms-table-card { border: 1px solid #000 !important; box-shadow: none !important; break-inside: avoid; }
 }

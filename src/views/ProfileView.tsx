@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { CheckCircle2 } from 'lucide-react';
+import { CheckCircle2, IdCard } from 'lucide-react';
 import { useAppState, defaultPlanningAnswers } from '../state/appState';
 import type { ViewName } from '../state/appState';
 import { ProvenanceBadge } from '../components/ProvenanceBadge';
@@ -140,6 +140,7 @@ export function ProfileView({ onNavigate }: { onNavigate: (v: ViewName) => void 
   if (!app) {
     return (
       <EmptyState
+        icon={IdCard}
         title="No application selected"
         description="Select an application from the Applications view to review its profile."
         primaryAction={<button className="ms-btn ms-btn-primary" onClick={() => onNavigate('applications')}>Go to Applications</button>}
@@ -191,6 +192,7 @@ export function ProfileView({ onNavigate }: { onNavigate: (v: ViewName) => void 
             <FieldRow app={app} field="runtimePlatforms" label="Runtime platforms" displayValue={app.runtimePlatforms.join(', ') || 'Unknown'} />
             <div style={{ marginTop: 'var(--ms-space-2)' }}>
               <strong>Technology components</strong>
+              <div className="ms-table-card" style={{ marginTop: 'var(--ms-space-2)' }}>
               <div className="ms-table-wrap ms-table-cards">
                 <table className="ms-table">
                   <thead><tr><th scope="col">Name</th><th scope="col">Kind</th><th scope="col">Version</th><th scope="col">Support status</th></tr></thead>
@@ -207,6 +209,7 @@ export function ProfileView({ onNavigate }: { onNavigate: (v: ViewName) => void 
                     ))}
                   </tbody>
                 </table>
+              </div>
               </div>
             </div>
           </div>

@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Search, ArrowUpDown } from 'lucide-react';
+import { Search, ArrowUpDown, Building2 } from 'lucide-react';
 import { useAppState } from '../state/appState';
 import type { ViewName } from '../state/appState';
 import { syntheticApplications } from '../data/syntheticData';
@@ -69,6 +69,7 @@ export function ApplicationsView({ onNavigate }: { onNavigate: (v: ViewName) => 
   if (applications.length === 0) {
     return (
       <EmptyState
+        icon={Building2}
         title="No applications loaded yet"
         description="Load the bundled synthetic ServiceNow fixtures to explore MigrationScope, or import your own CMDB export."
         primaryAction={
@@ -124,6 +125,7 @@ export function ApplicationsView({ onNavigate }: { onNavigate: (v: ViewName) => 
 
       <p aria-live="polite" className="ms-visually-hidden">{rows.length} applications shown</p>
 
+      <div className="ms-table-card">
       <div className="ms-table-wrap ms-table-cards">
         <table className="ms-table">
           <thead>
@@ -172,6 +174,7 @@ export function ApplicationsView({ onNavigate }: { onNavigate: (v: ViewName) => 
             ))}
           </tbody>
         </table>
+      </div>
       </div>
     </section>
   );

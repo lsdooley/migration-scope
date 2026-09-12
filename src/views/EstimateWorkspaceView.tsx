@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { Calculator } from 'lucide-react';
 import { useAppState, defaultPlanningAnswers } from '../state/appState';
 import type { ViewName } from '../state/appState';
 import { EmptyState } from '../components/EmptyState';
@@ -78,6 +79,7 @@ export function EstimateWorkspaceView({ onNavigate }: { onNavigate: (v: ViewName
   if (!app) {
     return (
       <EmptyState
+        icon={Calculator}
         title="No application selected"
         description="Select an application before starting an estimate."
         primaryAction={<button className="ms-btn ms-btn-primary" onClick={() => onNavigate('applications')}>Go to Applications</button>}
@@ -150,9 +152,9 @@ export function EstimateWorkspaceView({ onNavigate }: { onNavigate: (v: ViewName
 
         {step === 2 && (
           <div className="ms-card">
-            <RadioCardGroup legend="5. Business SME coverage" name="businessSme" options={SME_OPTIONS} value={answers.businessSmeCoverage} onChange={(v) => update('businessSmeCoverage', v)} />
-            <RadioCardGroup legend="6. Application SME coverage" name="applicationSme" options={SME_OPTIONS} value={answers.applicationSmeCoverage} onChange={(v) => update('applicationSmeCoverage', v)} />
-            <RadioCardGroup legend="7. Data/operations SME coverage" name="dataOpsSme" options={SME_OPTIONS} value={answers.dataOpsSmeCoverage} onChange={(v) => update('dataOpsSmeCoverage', v)} />
+            <RadioCardGroup legend="5. Business SME coverage" name="businessSme" variant="segmented" options={SME_OPTIONS} value={answers.businessSmeCoverage} onChange={(v) => update('businessSmeCoverage', v)} />
+            <RadioCardGroup legend="6. Application SME coverage" name="applicationSme" variant="segmented" options={SME_OPTIONS} value={answers.applicationSmeCoverage} onChange={(v) => update('applicationSmeCoverage', v)} />
+            <RadioCardGroup legend="7. Data/operations SME coverage" name="dataOpsSme" variant="segmented" options={SME_OPTIONS} value={answers.dataOpsSmeCoverage} onChange={(v) => update('dataOpsSmeCoverage', v)} />
 
             <details>
               <summary>Optional: record exact SME counts</summary>
@@ -184,6 +186,7 @@ export function EstimateWorkspaceView({ onNavigate }: { onNavigate: (v: ViewName
             <RadioCardGroup
               legend="8. Average allocation"
               name="allocation"
+              variant="segmented"
               options={[25, 50, 75, 100].map((n) => ({ value: String(n), label: `${n}%` }))}
               value={String(answers.deliveryTeamAllocationPct)}
               onChange={(v) => update('deliveryTeamAllocationPct', Number(v) as 25 | 50 | 75 | 100)}
@@ -192,6 +195,7 @@ export function EstimateWorkspaceView({ onNavigate }: { onNavigate: (v: ViewName
             <RadioCardGroup
               legend="9. AWS fluency"
               name="fluency"
+              variant="segmented"
               options={[
                 { value: 'new', label: 'New' },
                 { value: 'assisted', label: 'Assisted' },
@@ -204,6 +208,7 @@ export function EstimateWorkspaceView({ onNavigate }: { onNavigate: (v: ViewName
             <RadioCardGroup
               legend="10. Test evidence"
               name="testEvidence"
+              variant="segmented"
               options={[
                 { value: 'tribal-manual', label: 'Tribal / manual' },
                 { value: 'partial', label: 'Partial' },
@@ -216,6 +221,7 @@ export function EstimateWorkspaceView({ onNavigate }: { onNavigate: (v: ViewName
             <RadioCardGroup
               legend="11. Documentation confidence"
               name="docConfidence"
+              variant="segmented"
               options={[
                 { value: 'low', label: 'Low' },
                 { value: 'medium', label: 'Medium' },

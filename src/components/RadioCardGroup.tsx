@@ -4,13 +4,33 @@ export function RadioCardGroup<T extends string>({
   options,
   value,
   onChange,
+  variant = 'cards',
 }: {
   legend: string;
   name: string;
   options: { value: T; label: string; hint?: string }[];
   value: T;
   onChange: (v: T) => void;
+  /** 'cards' (default) for options with a description; 'segmented' for a
+   * compact pill row of short, same-length choices. */
+  variant?: 'cards' | 'segmented';
 }) {
+  if (variant === 'segmented') {
+    return (
+      <fieldset style={{ border: 'none', padding: 0, margin: 0, marginBottom: 'var(--ms-space-4)' }}>
+        <legend>{legend}</legend>
+        <div className="ms-segmented" role="radiogroup" aria-label={legend}>
+          {options.map((opt) => (
+            <label key={opt.value} className="ms-segmented-option">
+              <input type="radio" name={name} value={opt.value} checked={value === opt.value} onChange={() => onChange(opt.value)} />
+              {opt.label}
+            </label>
+          ))}
+        </div>
+      </fieldset>
+    );
+  }
+
   return (
     <fieldset style={{ border: 'none', padding: 0, margin: 0, marginBottom: 'var(--ms-space-4)' }}>
       <legend>{legend}</legend>
@@ -46,11 +66,11 @@ export function CheckboxChipGroup<T extends string>({
   return (
     <fieldset style={{ border: 'none', padding: 0, margin: 0, marginBottom: 'var(--ms-space-4)' }}>
       <legend>{legend}</legend>
-      <div style={{ display: 'flex', gap: 'var(--ms-space-2)', flexWrap: 'wrap' }}>
+      <div className="ms-chip-group">
         {options.map((opt) => (
-          <label key={opt.value} className="ms-radio-card" style={{ minHeight: 'var(--ms-target-min)', display: 'inline-flex', alignItems: 'center', padding: '6px 12px' }}>
+          <label key={opt.value} className="ms-chip">
             <input type="checkbox" checked={values.includes(opt.value)} onChange={() => toggle(opt.value)} />
-            <span style={{ marginLeft: 6 }}>{opt.label}</span>
+            {opt.label}
           </label>
         ))}
       </div>
