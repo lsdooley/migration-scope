@@ -1,13 +1,20 @@
 AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
 Description: >
-  MigrationScope static site — S3 (private, OAC-only) + CloudFront (HTTPS CDN).
-  Pure client-side app: no Lambda, no API Gateway, no database. Free-tier
-  eligible (S3 5GB, CloudFront 1TB/month for 12 months).
+  MigrationScope — S3 (private, OAC-only) + CloudFront (HTTPS CDN) for the
+  static site, plus a small Lambda + HTTP API that generates optional
+  AI-assisted narrative text (Claude Haiku) for the "Show AI narrative"
+  toggle. The site works fully without it — the narrative call is optional
+  and falls back to deterministic templates on any failure.
 
 Parameters:
   ProjectName:
     Type: String
     Default: migration-scope
+  AllowedOrigin:
+    Type: String
+    Description: CloudFront origin allowed to call the narrative API (plus localhost dev ports, always allowed below).
+    Default: https://d1v64qdf60rhoq.cloudfront.net
 
 Resources:
   SiteBucket:
@@ -85,6 +92,50 @@ Resources:
               StringEquals:
                 'AWS:SourceArn': !Sub 'arn:aws:cloudfront::${AWS::AccountId}:distribution/${Distribution}'
 
+  # --- Optional AI narrative backend -----------------------------------
+  # Public, unauthenticated, read-only-in-effect endpoint (it only explains
+  # numbers already computed client-side). Throttled as a cost guard since
+  # each call is a small but real, non-free-tier Anthropic API charge.
+
+  NarrativeApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      CorsConfiguration:
+        AllowOrigins:
+          - !Ref AllowedOrigin
+          - 'http://localhost:5173'
+          - 'http://localhost:5186'
+        AllowMethods: [POST, OPTIONS]
+        AllowHeaders: [content-type]
+      DefaultRouteSettings:
+        ThrottlingBurstLimit: 5
+        ThrottlingRateLimit: 2
+
+  NarrativeFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub '${ProjectName}-narrative'
+      CodeUri: backend/narrative-lambda/
+      Handler: index.handler
+      Runtime: nodejs24.x
+      Timeout: 15
+      MemorySize: 256
+      Environment:
+        Variables:
+          ANTHROPIC_KEY_PARAMETER: /migration-scope/anthropic-api-key
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action: ssm:GetParameter
+              Resource: !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/migration-scope/anthropic-api-key'
+      Events:
+        Narrative:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref NarrativeApi
+            Path: /narrative
+            Method: post
+
 Outputs:
   BucketName:
     Value: !Ref SiteBucket
@@ -94,3 +145,6 @@ Outputs:
     Value: !GetAtt Distribution.DomainName
   WebsiteURL:
     Value: !Sub 'https://${Distribution.DomainName}'
+  NarrativeApiUrl:
+    Description: Base URL for the narrative API — set as VITE_NARRATIVE_API_URL at build time.
+    Value: !Sub 'https://${NarrativeApi}.execute-api.${AWS::Region}.amazonaws.com/narrative'

@@ -1,8 +1,9 @@
-import { useState } from 'react';
-import { Download, FileJson, Printer, Sparkles } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Download, FileJson, Loader2, Printer, Sparkles, WifiOff } from 'lucide-react';
 import type { ApplicationRecord, EstimateResult } from '../model/types';
 import { exportEstimateJson, exportResultSummaryCsv, printEstimate } from '../exporters/exporters';
 import { narrativeProvider, NARRATIVE_LABEL } from '../narrative/narrativeProvider';
+import { fetchAiNarrative, type AiNarrative } from '../narrative/aiNarrativeClient';
 
 type Tab = 'overview' | 'scope' | 'risk' | 'team' | 'trace';
 const TABS: { id: Tab; label: string }[] = [
@@ -22,7 +23,27 @@ function riskBadgeClass(band: string): string {
 export function EstimateResultsPanel({ result, app }: { result: EstimateResult; app: ApplicationRecord }) {
   const [tab, setTab] = useState<Tab>('overview');
   const [aiPanelOpen, setAiPanelOpen] = useState(false);
+  const [aiNarrative, setAiNarrative] = useState<AiNarrative | null>(null);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiFailed, setAiFailed] = useState(false);
+  const [aiLoadedForId, setAiLoadedForId] = useState<string | null>(null);
   const gateRules = result.trace.rulesFired.filter((r) => r.isGate);
+
+  useEffect(() => {
+    if (!aiPanelOpen || aiLoadedForId === result.id) return;
+    let cancelled = false;
+    setAiLoading(true);
+    fetchAiNarrative(app, result).then((narrative) => {
+      if (cancelled) return;
+      setAiLoading(false);
+      setAiLoadedForId(result.id);
+      setAiNarrative(narrative);
+      setAiFailed(!narrative);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [aiPanelOpen, aiLoadedForId, app, result]);
 
   return (
     <div className="ms-card">
@@ -56,10 +77,30 @@ export function EstimateResultsPanel({ result, app }: { result: EstimateResult; 
       {aiPanelOpen && (
         <div className="ms-inline-warning" role="note" style={{ marginBottom: 'var(--ms-space-3)' }}>
           <strong>{NARRATIVE_LABEL}</strong>
-          <p>{narrativeProvider.executiveExplanation(result)}</p>
-          <p>{narrativeProvider.technicalTopDriverExplanation(result)}</p>
-          <p>{narrativeProvider.evidenceImprovementSuggestions(result)}</p>
-          <p>{narrativeProvider.dataQualityAnomalyExplanation(app, result)}</p>
+          {aiLoading && (
+            <p style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <Loader2 size={16} aria-hidden className="ms-spin" />Asking Claude Haiku to explain this estimate…
+            </p>
+          )}
+          {!aiLoading && aiNarrative && (
+            <>
+              <p>{aiNarrative.executive}</p>
+              <p>{aiNarrative.technicalTopDrivers}</p>
+              <p>{aiNarrative.evidenceImprovement}</p>
+              <p>{aiNarrative.dataQualityAnomaly}</p>
+            </>
+          )}
+          {!aiLoading && !aiNarrative && aiFailed && (
+            <>
+              <p style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'var(--ms-text-muted)' }}>
+                <WifiOff size={16} aria-hidden />AI narrative service unavailable — showing the deterministic explanation instead.
+              </p>
+              <p>{narrativeProvider.executiveExplanation(result)}</p>
+              <p>{narrativeProvider.technicalTopDriverExplanation(result)}</p>
+              <p>{narrativeProvider.evidenceImprovementSuggestions(result)}</p>
+              <p>{narrativeProvider.dataQualityAnomalyExplanation(app, result)}</p>
+            </>
+          )}
         </div>
       )}
       <div style={{ display: 'flex', gap: 'var(--ms-space-2)', flexWrap: 'wrap', marginBottom: 'var(--ms-space-4)' }}>

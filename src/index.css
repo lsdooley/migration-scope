@@ -619,6 +619,9 @@ table.ms-table tbody tr:last-child td { border-bottom: none; }
 }
 @keyframes ms-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
 
+.ms-spin { animation: ms-spin 0.9s linear infinite; }
+@keyframes ms-spin { to { transform: rotate(360deg); } }
+
 .ms-live-badge {
   display: inline-flex;
   align-items: center;

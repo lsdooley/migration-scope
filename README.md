@@ -33,10 +33,13 @@ npm test          # run the Vitest suite (unit + scenario tests)
 npm run build     # type-check and produce a production build in dist/
 ```
 
-No backend, database, authentication, or external API key is required. All
-application state lives in memory for the lifetime of the browser tab —
-refreshing the page starts over by design (no `localStorage` /
-`sessionStorage` is used).
+No database or authentication is required, and the core app needs no backend
+at all — it works fully offline/client-side. The only optional backend is a
+small Lambda + API Gateway (`backend/narrative-lambda/`) behind the "Show AI
+narrative" toggle; without it configured, that toggle transparently falls
+back to deterministic templates. All application state lives in memory for
+the lifetime of the browser tab — refreshing the page starts over by design
+(no `localStorage` / `sessionStorage` is used).
 
 ## Using the app
 
@@ -80,7 +83,8 @@ src/
   data/
     syntheticData.ts        12 synthetic ServiceNow fixtures
   narrative/
-    narrativeProvider.ts    deterministic "AI" narrative templates
+    narrativeProvider.ts    deterministic template fallback (always available)
+    aiNarrativeClient.ts    calls the optional narrative Lambda (Claude Haiku); null on any failure
   exporters/
     exporters.ts            JSON/CSV export, spreadsheet-injection guard
   state/
@@ -143,7 +147,9 @@ authoritative formulas and coefficients. In brief:
 - Exported CSV cells beginning with `=`, `+`, `-`, or `@` are prefixed with a
   leading `'` to prevent spreadsheet-formula injection when the export is
   opened in Excel/Sheets (`src/parsers/csvParser.ts#sanitizeCsvCell`).
-- No credentials, API keys, or secrets are used anywhere in this app.
+- No credentials, API keys, or secrets are used in the frontend or committed to
+  this repo. The optional narrative Lambda reads its Anthropic API key from AWS
+  SSM Parameter Store (SecureString) at runtime — see `DEPLOYMENT.md`.
 
 ## Accessibility
 
@@ -167,5 +173,9 @@ the theme toggle.
   conflicting data, etc.), not to benchmark anything.
 - State is in-memory only; there is no persistence, multi-user support, or
   real ServiceNow/CMDB/AWS connection.
-- The AI narrative panel uses deterministic string templates, not a live
-  model call, to keep the POC dependency-free and reproducible.
+- The AI narrative panel calls a real model (Claude Haiku, via a small
+  Lambda + API Gateway backend — see `DEPLOYMENT.md`) when
+  `VITE_NARRATIVE_API_URL` is configured; without it, or on any failure, it
+  falls back to the deterministic templates in `narrativeProvider.ts`. Either
+  way, the AI layer only explains already-calculated numbers — it cannot
+  change a score, formula, or rule.
