@@ -59,12 +59,33 @@ function buildUserPrompt(app, result) {
   return `Application facts:\n${JSON.stringify(facts)}\n\nCalculated outputs:\n${JSON.stringify(outputs)}`;
 }
 
+// Only reflect the request Origin back as access-control-allow-origin when it
+// is on the allowlist — echoing an arbitrary Origin would let any site read the
+// response. Allowed origins come from the ALLOWED_ORIGINS env var (comma-
+// separated), set from the stack's AllowedOrigin parameter plus local dev.
+const ALLOWED_ORIGINS = new Set(
+  (process.env.ALLOWED_ORIGINS ?? '')
+    .split(',')
+    .map((o) => o.trim())
+    .filter(Boolean),
+);
+
+// Reject request bodies larger than this. The payload is a small facts/outputs
+// object; anything bigger is abuse (unbounded input would inflate Anthropic
+// input-token cost).
+const MAX_BODY_BYTES = 64 * 1024;
+
+function resolveCorsOrigin(origin) {
+  return origin && ALLOWED_ORIGINS.has(origin) ? origin : null;
+}
+
 function jsonResponse(statusCode, body, origin) {
+  const allowOrigin = resolveCorsOrigin(origin);
   return {
     statusCode,
     headers: {
       'content-type': 'application/json',
-      ...(origin ? { 'access-control-allow-origin': origin } : {}),
+      ...(allowOrigin ? { 'access-control-allow-origin': allowOrigin } : {}),
     },
     body: JSON.stringify(body),
   };
@@ -73,9 +94,14 @@ function jsonResponse(statusCode, body, origin) {
 export const handler = async (event) => {
   const origin = event.headers?.origin ?? event.headers?.Origin;
 
+  const rawBody = event.body ?? '{}';
+  if (Buffer.byteLength(rawBody, 'utf8') > MAX_BODY_BYTES) {
+    return jsonResponse(413, { error: 'Request body too large' }, origin);
+  }
+
   let payload;
   try {
-    payload = JSON.parse(event.body ?? '{}');
+    payload = JSON.parse(rawBody);
   } catch {
     return jsonResponse(400, { error: 'Invalid JSON body' }, origin);
   }

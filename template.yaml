@@ -123,6 +123,9 @@ Resources:
       Environment:
         Variables:
           ANTHROPIC_KEY_PARAMETER: /migration-scope/anthropic-api-key
+          # Mirrors NarrativeApi CorsConfiguration.AllowOrigins so the function
+          # only reflects a known Origin back in access-control-allow-origin.
+          ALLOWED_ORIGINS: !Sub '${AllowedOrigin},http://localhost:5173,http://localhost:5186'
       Policies:
         - Statement:
             - Effect: Allow
